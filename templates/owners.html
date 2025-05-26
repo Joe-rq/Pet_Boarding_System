@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}主人列表 - 宠物寄养小屋{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2><i class="fas fa-users"></i> 所有主人列表</h2>
+        <p class="text-muted">点击主人姓名可以查看其宠物详情</p>
+    </div>
+</div>
+
+{% if owners %}
+<div class="row">
+    {% for owner in owners %}
+    <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-user"></i> {{ owner.name }}
+                </h5>
+                <p class="card-text">
+                    <strong>电话：</strong>{{ owner.phone or '未提供' }}<br>
+                    <strong>邮箱：</strong>{{ owner.email or '未提供' }}<br>
+                    <strong>宠物数量：</strong>{{ owner.pets|length }} 只<br>
+                    <strong>注册时间：</strong>{{ owner.created_at.strftime('%Y-%m-%d') }}
+                </p>
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('owner_pets', owner_name=owner.name) }}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-search"></i> 查看宠物
+                    </a>
+                    <a href="{{ url_for('edit_owner', owner_id=owner.id) }}" class="btn btn-warning btn-sm">
+                        <i class="fas fa-edit"></i> 编辑信息
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-warning text-center">
+    <h4>暂无主人信息</h4>
+    <p>请先添加一些主人数据。</p>
+    <a href="{{ url_for('add_owner') }}" class="btn btn-primary">
+        <i class="fas fa-plus"></i> 添加主人
+    </a>
+</div>
+{% endif %}
+{% endblock %} 

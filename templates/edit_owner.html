@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}编辑主人信息 - 宠物寄养小屋{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-warning text-dark">
+                <h4><i class="fas fa-edit"></i> 编辑主人信息</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">姓名 *</label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="name" 
+                                       name="name" 
+                                       value="{{ owner.name }}" 
+                                       required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="phone" class="form-label">电话</label>
+                                <input type="tel" 
+                                       class="form-control" 
+                                       id="phone" 
+                                       name="phone" 
+                                       value="{{ owner.phone or '' }}">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="email" class="form-label">邮箱</label>
+                                <input type="email" 
+                                       class="form-control" 
+                                       id="email" 
+                                       name="email" 
+                                       value="{{ owner.email or '' }}">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">注册时间</label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       value="{{ owner.created_at.strftime('%Y-%m-%d %H:%M') }}" 
+                                       readonly>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <!-- 宠物信息预览 -->
+                    <div class="mb-3">
+                        <h6><i class="fas fa-paw"></i> 拥有的宠物 ({{ owner.pets|length }} 只)</h6>
+                        {% if owner.pets %}
+                        <div class="row">
+                            {% for pet in owner.pets %}
+                            <div class="col-md-4 mb-2">
+                                <div class="card card-body p-2 {{ 'border-success' if pet.is_boarding else 'border-secondary' }}">
+                                    <small>
+                                        <strong>{{ pet.name }}</strong> ({{ pet.species }})<br>
+                                        体重: {{ pet.weight }}kg<br>
+                                        状态: 
+                                        <span class="badge {{ 'bg-success' if pet.is_boarding else 'bg-secondary' }}">
+                                            {{ '寄养中' if pet.is_boarding else '已离开' }}
+                                        </span>
+                                    </small>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <p class="text-muted">该主人暂无宠物</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{{ url_for('list_owners') }}" class="btn btn-secondary me-md-2">
+                            <i class="fas fa-arrow-left"></i> 取消
+                        </a>
+                        <button type="submit" class="btn btn-warning">
+                            <i class="fas fa-save"></i> 保存修改
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- 危险操作区域 -->
+        <div class="card mt-4 border-danger">
+            <div class="card-header bg-danger text-white">
+                <h6><i class="fas fa-exclamation-triangle"></i> 危险操作</h6>
+            </div>
+            <div class="card-body">
+                <p class="text-danger">
+                    <strong>警告：</strong>删除主人将同时删除其所有宠物信息，此操作不可恢复！
+                </p>
+                <form method="POST" action="{{ url_for('delete_owner', owner_id=owner.id) }}" 
+                      onsubmit="return confirm('确定要删除主人 {{ owner.name }} 及其所有宠物吗？此操作不可恢复！')">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> 删除主人
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

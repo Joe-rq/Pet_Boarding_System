@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %}宠物列表 - 宠物寄养小屋{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="fas fa-dog"></i> 宠物列表</h2>
+            <div class="d-flex align-items-center">
+                <span class="badge bg-primary fs-6 me-3">按体重从轻到重排序</span>
+                <span class="badge bg-info fs-6">当前显示：{{ filter_text }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 筛选选项 -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body py-3">
+                <div class="d-flex justify-content-center align-items-center">
+                    <span class="me-3"><i class="fas fa-filter"></i> 筛选：</span>
+                    <div class="btn-group" role="group">
+                        <a href="{{ url_for('list_pets', status='all') }}" 
+                           class="btn {{ 'btn-primary' if status_filter == 'all' else 'btn-outline-primary' }}">
+                            <i class="fas fa-list"></i> 全部宠物
+                        </a>
+                        <a href="{{ url_for('list_pets', status='boarding') }}" 
+                           class="btn {{ 'btn-success' if status_filter == 'boarding' else 'btn-outline-success' }}">
+                            <i class="fas fa-home"></i> 寄养中
+                        </a>
+                        <a href="{{ url_for('list_pets', status='not_boarding') }}" 
+                           class="btn {{ 'btn-secondary' if status_filter == 'not_boarding' else 'btn-outline-secondary' }}">
+                            <i class="fas fa-sign-out-alt"></i> 已离开
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if pets %}
+<div class="row">
+    {% for pet in pets %}
+    <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card pet-card h-100">
+            <div class="card-header bg-light">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-{{ 'dog' if pet.species == '狗' else 'cat' }}"></i>
+                    {{ pet.name }}
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6">
+                        <p class="card-text">
+                            <strong>物种：</strong>{{ pet.species }}<br>
+                            <strong>品种：</strong>{{ pet.breed or '未知' }}<br>
+                            <strong>年龄：</strong>{{ pet.age or '未知' }}岁
+                        </p>
+                    </div>
+                    <div class="col-6">
+                        <p class="card-text">
+                            <strong>体重：</strong>
+                            <span class="badge bg-info">{{ pet.weight }}kg</span><br>
+                            <strong>颜色：</strong>{{ pet.color or '未知' }}<br>
+                            <strong>状态：</strong>
+                            <span class="badge {{ 'bg-success' if pet.is_boarding else 'bg-secondary' }}">
+                                {{ '寄养中' if pet.is_boarding else '已离开' }}
+                            </span>
+                        </p>
+                    </div>
+                </div>
+                <hr>
+                <p class="card-text">
+                    <strong>主人：</strong>
+                    <a href="{{ url_for('owner_pets', owner_name=pet.owner.name) }}" class="text-decoration-none">
+                        <i class="fas fa-user"></i> {{ pet.owner.name }}
+                    </a>
+                </p>
+                <small class="text-muted">
+                    <i class="fas fa-calendar"></i> 
+                    入住时间：{{ pet.check_in_date.strftime('%Y-%m-%d %H:%M') }}
+                </small>
+            </div>
+            <div class="card-footer bg-light">
+                <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                    <a href="{{ url_for('edit_pet', pet_id=pet.id) }}" class="btn btn-warning btn-sm">
+                        <i class="fas fa-edit"></i> 编辑
+                    </a>
+                    <form method="POST" action="{{ url_for('toggle_boarding', pet_id=pet.id) }}" class="d-inline">
+                        <button type="submit" class="btn {{ 'btn-outline-secondary' if pet.is_boarding else 'btn-outline-success' }} btn-sm">
+                            <i class="fas fa-{{ 'sign-out-alt' if pet.is_boarding else 'sign-in-alt' }}"></i>
+                            {{ '离开' if pet.is_boarding else '入住' }}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i>
+            <strong>统计信息：</strong>
+            共有 <strong>{{ pets|length }}</strong> 只{{ filter_text }}的宠物，
+            {% if pets|length > 0 %}
+            体重范围：<strong>{{ pets[0].weight }}kg</strong> - <strong>{{ pets[-1].weight }}kg</strong>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% else %}
+<div class="row">
+    <div class="col-12">
+        <div class="alert alert-warning text-center">
+            <i class="fas fa-exclamation-triangle fa-3x mb-3"></i>
+            <h4>暂无寄养中的宠物</h4>
+            <p>目前没有宠物在寄养中，请先添加一些宠物数据。</p>
+            <a href="{{ url_for('init_db') }}" class="btn btn-primary me-2">
+                <i class="fas fa-database"></i> 初始化示例数据
+            </a>
+            <a href="{{ url_for('add_pet') }}" class="btn btn-success">
+                <i class="fas fa-plus"></i> 添加宠物
+            </a>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %} 
