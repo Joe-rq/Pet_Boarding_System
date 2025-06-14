@@ -79,24 +79,45 @@ python app.py
 
 ```
 Pet_Boarding_System/
-├── app.py              # 主应用文件
-├── models.py           # 数据库模型
-├── config.py           # 配置文件
-├── requirements.txt    # 依赖包
-├── README.md          # 项目说明
-├── templates/         # HTML模板
-│   ├── base.html      # 基础模板
-│   ├── index.html     # 首页
-│   ├── pets.html      # 宠物列表
-│   ├── owner_pets.html # 主人宠物详情
-│   ├── owners.html    # 主人列表
-│   ├── add_owner.html # 添加主人
-│   └── add_pet.html   # 添加宠物
-├── pet_boarding.db    # SQLite数据库文件
-├── 页面展示.png       # 系统界面截图
-├── 宠物编辑.png       # 宠物编辑界面截图
-├── 宠物列表.png       # 宠物列表界面截图
-└── 宠物添加.png       # 宠物添加界面截图
+├── app.py                    # 主应用文件
+├── requirements.txt          # Python依赖包
+├── .git/                     # Git版本控制
+├── __pycache__/             # Python缓存文件
+├── .DS_Store                # macOS系统文件
+│
+├── src/                      # 源代码目录
+│   ├── __init__.py          # 包初始化文件
+│   ├── models/              # 数据模型
+│   │   ├── __init__.py
+│   │   └── models.py        # 数据库模型定义
+│   ├── templates/           # HTML模板文件
+│   │   ├── base.html        # 基础模板
+│   │   ├── index.html       # 首页
+│   │   ├── pets.html        # 宠物列表
+│   │   ├── owner_pets.html  # 主人宠物详情
+│   │   ├── owners.html      # 主人列表
+│   │   ├── add_owner.html   # 添加主人
+│   │   ├── add_pet.html     # 添加宠物
+│   │   ├── edit_owner.html  # 编辑主人
+│   │   ├── edit_pet.html    # 编辑宠物
+│   │   └── search_owner.html # 搜索主人
+│   ├── static/              # 静态资源
+│   │   ├── css/             # CSS样式文件（预留）
+│   │   ├── js/              # JavaScript文件（预留）
+│   │   └── images/          # 图片资源
+│   │       ├── 页面展示.png
+│   │       ├── 宠物编辑.png
+│   │       ├── 宠物添加.png
+│   │       └── 宠物列表.png
+│   └── utils/               # 工具和配置
+│       ├── __init__.py
+│       └── config.py        # 应用配置
+│
+├── database/                # 数据库文件
+│   └── pet_boarding.db     # SQLite数据库文件
+│
+└── docs/                    # 文档
+    └── README.md           # 项目说明文档（本文件）
 ```
 
 ## 🔧 主要路由
@@ -108,6 +129,12 @@ Pet_Boarding_System/
 - `/owners` - 所有主人列表
 - `/add_owner` - 添加主人
 - `/add_pet` - 添加宠物
+- `/edit_owner/<owner_id>` - 编辑主人
+- `/edit_pet/<pet_id>` - 编辑宠物
+- `/delete_owner/<owner_id>` - 删除主人
+- `/delete_pet/<pet_id>` - 删除宠物
+- `/toggle_boarding/<pet_id>` - 切换寄养状态
+- `/search_owner` - 搜索主人
 
 ## 💡 核心ORM查询
 
@@ -160,4 +187,20 @@ pet.owner   # 获取宠物的主人
 - 实现了完整的CRUD操作
 - 数据库关系通过外键和relationship建立
 - 模板继承减少代码重复
-- 消息闪现提供用户反馈 
+- 消息闪现提供用户反馈
+
+## 📁 文件结构优化
+
+### 优化说明
+- **按功能分类**: 将文件按功能模块分类组织
+- **代码分离**: 模型、模板、配置分别存放
+- **资源管理**: 静态资源独立管理
+- **数据独立**: 数据库文件独立存放
+- **文档集中**: 文档和说明集中管理
+
+### 结构优势
+1. **清晰明了**: 文件结构更加清晰，便于理解
+2. **易于维护**: 按功能分类，便于维护和扩展
+3. **模块化**: 代码模块化程度更高
+4. **可扩展**: 预留了扩展空间（CSS、JS目录）
+5. **标准化**: 符合Python项目标准结构 

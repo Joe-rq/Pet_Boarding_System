@@ -1,11 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
-from models import db, Owner, Pet
-from config import Config
+from src.models.models import db, Owner, Pet
+from src.utils.config import Config
 from sqlalchemy import func
 
 def create_app():
     """应用工厂函数"""
-    app = Flask(__name__)
+    app = Flask(__name__, template_folder='src/templates')
     app.config.from_object(Config)
     
     # 初始化数据库
