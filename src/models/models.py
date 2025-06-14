@@ -1,3 +1,12 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+数据库模型定义
+
+MIT License
+Copyright (c) 2024 Pet Boarding System
+"""
+
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 

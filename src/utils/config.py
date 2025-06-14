@@ -1,3 +1,12 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+应用配置文件
+
+MIT License
+Copyright (c) 2024 Pet Boarding System
+"""
+
 import os
 
 class Config:
